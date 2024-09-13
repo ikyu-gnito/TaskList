@@ -16,6 +16,7 @@ body {
     background-color: var(--color1);
     color: var(--color-font);
 }
+/* corpo do proojeto */
 
 .container {
     display: flex;
@@ -28,6 +29,7 @@ body {
     color: white;
     padding: 20px;
 }
+/* menu lateral */
 
 .sidebar ul {
     list-style: none;
