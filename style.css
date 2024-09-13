@@ -1,91 +1,73 @@
+:root{
+    --color1: #343433;
+    --color2: #171717;
+    --color-font: #E8E8E8;
+}
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box
+    box-sizing: border-box;
 }
 
 body {
+    font-family: Arial, sans-serif;
     display: flex;
-    flex-wrap: wrap;
-    background-color: #ffd335;
-    margin: 3px;
-    flex: 1 1 100vw;
-    background: 343433;
-    color: #fff
+    height: 100vh;
+    background-color: var(--color1);
+    color: var(--color-font);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box
-}
-
-main {
-    border: solid 1px red;
+.container {
     display: flex;
-    width: 100%
-}
-
-main aside {
-    border: solid 1px blue;
-    background-color: #1e1e1c;
-    width: 200px;
-    height: auto
-}
-
-main aside nav {
-    display: flex;
-    flex-direction: column
-}
-
-main aside nav a {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    text-decoration: none;
-    background-color: #1e1e1c;
-    color: #fff;
-    margin: 10px 10px 10px 10px;
-    padding: 5px 5px 5px 5px
-}
-
-main aside nav a:hover {
-    background-color: green;
-    color: #fff
-}
-
-main aside nav a.teste {
-    background-color: #1e1e1c;
-    margin-top: 20px;
-    font-size: 20px
-}
-
-main aside nav a.teste:hover {
-    background-color: green
-}
-
-main section {
-    border: solid 1px green;
-    padding: 10px;
-    width: calc(100% - 200px);
-    display: flex;
-    gap: 10px
-}
-
-main section div {
-    background-color: #1e1e1c;
-    min-width: 150px
-}
-
-main section div h2 {
-    background-color: #343433
-}
-
-main section div li {
-    border: solid 1px green;
-    background-color: #343433;
-    padding: 10px;
-    margin-top: 10px;
     width: 100%;
-    list-style: none
+}
+
+.sidebar {
+    width: 20%;
+    background-color: var(--color1);
+    color: white;
+    padding: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.main-content {
+    display: flex;
+    width: 80%;
+    padding: 20px;
+}
+
+.column {
+    width: 33.33%;
+    padding: 10px;
+    background-color: #ecf0f1;
+    margin: 0 10px;
+    border-radius: 10px;
+}
+
+.column h2 {
+    text-align: center;
+}
+
+.to-do {
+    background-color: var(--color2);
+}
+
+.in-progress {
+    background-color: var(--color2);
+}
+
+.done {
+    background-color: var(--color2);
 }
