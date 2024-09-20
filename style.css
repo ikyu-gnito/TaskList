@@ -1,6 +1,7 @@
 :root{
     --color1: #343433;
     --color2: #171717;
+    --color3: #1E1E1C;
     --color-font: #E8E8E8;
 }
 * {
@@ -13,7 +14,7 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     height: 100vh;
-    background-color: var(--color1);
+    background-color: var(--color3);
     color: var(--color-font);
 }
 /* corpo do proojeto */
@@ -24,40 +25,67 @@ body {
 }
 
 .sidebar {
+    position: relative;
     width: 20%;
-    background-color: var(--color1);
+    background-color: var(--color3);
     color: white;
     padding: 20px;
+    border-right: 1px solid var(--color1);
 }
 /* menu lateral */
 
 .sidebar ul {
+    width: 100%;
     list-style: none;
+    padding: 15px 0 0 15px;
 }
 
 .sidebar ul li {
-    margin: 15px 0;
+    margin: 10px 0;
+    font-size: 12px;
+    width: 100%;
 }
 
 .sidebar ul li a {
-    color: white;
+    position: relative;
+    color: var(--color-font);
     text-decoration: none;
 }
+.sidebar-title{
+    width: 100%;
+    position: relative;
+    border-bottom: var(--color-font) solid 1px;
+    font-size: 10px;
+}
+.sidebar-add{
+    position: absolute;
+    right: 0px;
+    bottom: 3px;
+    font-size: 12px;
+}/*Áreas de trabalho e icone de adicionar pasta*/
+.folder{
+    padding: 0 7px 0 0;
+}
+.folder-settings{
+    padding-left: 88px;
+}
+/* conteudos do menu lateral ^^^^*/
 
 .main-content {
     display: flex;
     width: 80%;
     padding: 20px;
 }
-
+/* espaço reservado para as colunas */
 .column {
+    position: relative;
     width: 33.33%;
     padding: 10px;
     background-color: #ecf0f1;
     margin: 0 10px;
     border-radius: 10px;
 }
-
+/* colunas */
 .column h2 {
     text-align: center;
 }
@@ -73,3 +101,41 @@ body {
 .done {
     background-color: var(--color2);
 }
+.card{
+    position: relative;
+    background-color: var(--color1);
+    border-radius: 3px;
+    padding: 15px;
+    height: 77px;
+    box-shadow: 0 2px 5px rgb(0, 0, 0,0.1);
+    margin: 10px 0;
+}
+/* card de task */
+.card-title{
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    margin: 0;
+    font-size: 15px;
+}
+.fav{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    margin: 0;
+}
+/* icone de favoritar */
+.add{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    background-color: var(--color1);
+    padding: 10px;
+    border-radius: 50%;
+}
+.settings{
+    position: absolute;
+    bottom: 10px;
+    font-size: 25px;
+}
+/* icone de adicionar mais cards */
