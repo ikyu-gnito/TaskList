@@ -1,0 +1,185 @@
+body {
+    background-color: #222;
+    color: #fff;
+    font-family: sans-serif;
+    display: flex;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    gap: 20px;
+}
+
+.sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 8px;
+}
+
+.sidebar h2 {
+    margin-bottom: 10px;
+}
+
+.sidebar .areas-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.areas-container input {
+    border: none;
+    background-color: transparent;
+    color: #fff;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.column {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 250px;
+}
+
+.task {
+    background-color: #444;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: move;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.task .title {
+    flex-grow: 1;
+    margin-left: 10px;
+    user-select: none;
+}
+
+.task .tag {
+    background-color: #555;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-right: 10px;
+    color: #fff;
+}
+
+.task .edit-button,
+.task .delete-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    padding: 5px 10px;
+    margin-left: 10px;
+    font-size: 14px;
+    display: none;
+}
+
+.task:hover .edit-button,
+.task:hover .delete-button {
+    display: block;
+}
+
+.task.active {
+    background-color: #555;
+}
+
+.task.active .title {
+    color: #fff;
+}
+
+.task.active .tag {
+    background-color: #666;
+}
+
+.draggable {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: #444;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    opacity: 0.8;
+}
+
+.draggable .title {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.draggable .tag {
+    background-color: #555;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-right: 10px;
+    color: #fff;
+}
+
+.draggable.active {
+    background-color: #555;
+}
+
+.draggable.active .title {
+    color: #fff;
+}
+
+.draggable.active .tag {
+    background-color: #666;
+}
+
+.column.active {
+    background-color: #444;
+}
+
+.column.active .task {
+    background-color: #555;
+}
+
+.column.active .task.active {
+    background-color: #666;
+}
+
+.column.active .task .tag {
+    background-color: #777;
+}
+
+.new-task-form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.new-task-form input {
+    border: none;
+    background-color: transparent;
+    color: #fff;
+    padding: 5px;
+    margin-left: 10px;
+    flex-grow: 1;
+}
+
+.new-task-form button {
+    background-color: #555;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
