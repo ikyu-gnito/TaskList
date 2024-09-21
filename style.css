@@ -111,12 +111,19 @@ body {
     margin: 10px 0;
 }
 /* card de task */
-.card-title{
+.card-title[contenteditable="true"]{
     position: absolute;
     top: 10px;
     left: 15px;
     margin: 0;
     font-size: 15px;
+}
+
+.card{
+    cursor: grab;
+}
+.card:active{
+    cursor: grabbing;
 }
 .fav{
     position: absolute;
@@ -132,10 +139,18 @@ body {
     background-color: var(--color1);
     padding: 10px;
     border-radius: 50%;
+    margin-top: 20px;
+}
+.add:hover{
+    cursor: pointer;
 }
 .settings{
     position: absolute;
     bottom: 10px;
     font-size: 25px;
+}
+
+.hidden{
+    display: none;
 }
 /* icone de adicionar mais cards */
