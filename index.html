@@ -44,21 +44,25 @@
       <!-- colunas -->
       <main class="main-content">
         <!-- coluna to do -->
-        <section class="column to-do">
-          <h2>A fazer</h2>
-
-          <i class="fa fa-add add" id="openModalBtn"></i>
-        </section>
+        <div class="column to-do" id="todoColumn">
+          <div class="head">
+            <span>A fazer</span>
+            <i class="fa fa-add principal" onclick="openModal()"></i>
+          </div>
+          <div class="body"></div>
+        </div>
 
         <!-- coluna in progress -->
-        <section class="column in-progress">
-          <h2>Em progresso</h2>
-        </section>
+        <div class="column in-progress" id="inprogressColumn">
+          <div class="head"><span>Em progresso</span></div>
+          <div class="body"></div>
+        </div>
 
         <!-- coluna done -->
-        <section class="column done">
-          <h2>Concluído</h2>
-        </section>
+        <div class="column done" id="doneColumn">
+          <div class="head"><span>Concluído</span></div>
+          <div class="body"></div>
+        </div>
       </main>
     </div>
     <!-- Modal do card -->
@@ -66,7 +70,7 @@
       <div class="box">
         <div class="head">
           <span>Nova Tarefa</span>
-          <button>X</button>
+          <button onclick="closeModal()">X</button>
         </div>
         <div class="form">
           <div class="form-grouo">
@@ -88,7 +92,7 @@
           </div>
 
           <div class="btm-wrapper">
-            <button class="form-add">Adicionar</button>
+            <button class="form-add" onclick="createTask()">Adicionar</button>
           </div>
         </div>
       </div>

@@ -142,6 +142,7 @@ body {
     right: 0px;
     bottom: 3px;
     font-size: 12px;
+    cursor: pointer;
 }
 
 /*Áreas de trabalho e icone de adicionar pasta*/
@@ -151,6 +152,7 @@ body {
 
 .folder-settings {
     padding-left: 88px;
+    cursor: pointer;
 }
 
 /* conteudos do menu lateral ^^^^*/
@@ -158,48 +160,62 @@ body {
 .main-content {
     display: flex;
     width: 80%;
-    padding: 20px;
+    padding: 30px;
+    gap: 30px;
 }
 
 /* espaço reservado para as colunas */
 .column {
-    position: relative;
     width: 33.33%;
-    padding: 10px;
-    background-color: #ecf0f1;
-    margin: 0 10px;
     border-radius: 10px;
     overflow: hidden;
+    background-color: var(--color2);
 }
 
 /* colunas */
-.column h2 {
+.column .head{
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--color-font);
     text-align: center;
     padding: 10px 0;
 }
-
-.to-do {
-    background-color: var(--color2);
+.column .body{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+#todoColumn .head{
+    display: flex;
+    justify-content: space-between;
+}
+#todoColumn .head .principal{
+    padding-right: 10px;
+    font-size: 25px;
+    color: var(--color-font);
+    cursor: pointer;
 }
 
-.in-progress {
-    background-color: var(--color2);
+#todoColumn .head span{
+    flex-grow: 1;
+    text-align: center;
 }
 
-.done {
-    background-color: var(--color2);
-}
-
-.card {
-    position: relative;
+.column .card {
     background-color: var(--color1);
-    border-radius: 3px;
-    padding: 15px;
-    height: 77px;
-    box-shadow: 0 2px 5px rgb(0, 0, 0, 0.1);
-    margin: 10px 0;
+    padding: 10px;
+    border-radius: 7px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
 }
-
+.column .card .info{
+    font-size: 16px;
+    color: var(--color-font);
+    display: flex;
+    flex-direction: column;
+}
 .fav {
     position: absolute;
     top: 10px;
@@ -208,25 +224,12 @@ body {
 }
 
 /* icone de favoritar */
-.add {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    background-color: var(--color1);
-    padding: 10px;
-    border-radius: 50%;
-    margin-top: 10px;
-    cursor: pointer;
-}
+
 
 .settings {
     position: absolute;
     bottom: 10px;
     font-size: 25px;
-}
-
-.hidden {
-    display: none;
 }
 
 /* icone de adicionar mais cards */
@@ -240,6 +243,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    display: none;
 }
 
 .box {
