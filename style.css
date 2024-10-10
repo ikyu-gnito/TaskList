@@ -1,22 +1,99 @@
-:root{
+:root {
     --color1: #343433;
     --color2: #171717;
     --color3: #1E1E1C;
+    --color4: #535353;
     --color-font: #E8E8E8;
 }
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    outline: none;
+}
+
+.roboto-thin {
+    font-family: "Roboto", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.roboto-light {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.roboto-regular {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.roboto-medium {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.roboto-bold {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.roboto-black {
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+}
+
+.roboto-thin-italic {
+    font-family: "Roboto", sans-serif;
+    font-weight: 100;
+    font-style: italic;
+}
+
+.roboto-light-italic {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.roboto-regular-italic {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.roboto-medium-italic {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.roboto-bold-italic {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.roboto-black-italic {
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
+    font-style: italic;
 }
 
 body {
-    font-family: Arial, sans-serif;
+
     display: flex;
     height: 100vh;
     background-color: var(--color3);
     color: var(--color-font);
 }
+
 /* corpo do proojeto */
 
 .container {
@@ -32,6 +109,7 @@ body {
     padding: 20px;
     border-right: 1px solid var(--color1);
 }
+
 /* menu lateral */
 
 .sidebar ul {
@@ -51,91 +129,221 @@ body {
     color: var(--color-font);
     text-decoration: none;
 }
-.sidebar-title{
+
+.sidebar-title {
     width: 100%;
     position: relative;
     border-bottom: var(--color-font) solid 1px;
     font-size: 10px;
 }
-.sidebar-add{
+
+.sidebar-add {
     position: absolute;
     right: 0px;
     bottom: 3px;
     font-size: 12px;
-}/*Áreas de trabalho e icone de adicionar pasta*/
-.folder{
+    cursor: pointer;
+}
+
+/*Áreas de trabalho e icone de adicionar pasta*/
+.folder {
     padding: 0 7px 0 0;
 }
-.folder-settings{
+
+.folder-settings {
     padding-left: 88px;
+    cursor: pointer;
 }
+
 /* conteudos do menu lateral ^^^^*/
 
 .main-content {
     display: flex;
     width: 80%;
-    padding: 20px;
+    padding: 30px;
+    gap: 30px;
 }
+
 /* espaço reservado para as colunas */
 .column {
-    position: relative;
     width: 33.33%;
-    padding: 10px;
-    background-color: #ecf0f1;
-    margin: 0 10px;
     border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--color2);
 }
+
 /* colunas */
-.column h2 {
+.column .head{
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--color-font);
+    text-align: center;
+    padding: 10px 0;
+}
+.column .body{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+#todoColumn .head{
+    display: flex;
+    justify-content: space-between;
+}
+#todoColumn .head .principal{
+    padding-right: 10px;
+    font-size: 25px;
+    color: var(--color-font);
+    cursor: pointer;
+}
+
+#todoColumn .head span{
+    flex-grow: 1;
     text-align: center;
 }
 
-.to-do {
-    background-color: var(--color2);
-}
-
-.in-progress {
-    background-color: var(--color2);
-}
-
-.done {
-    background-color: var(--color2);
-}
-.card{
-    position: relative;
+.column .card {
     background-color: var(--color1);
-    border-radius: 3px;
-    padding: 15px;
-    height: 77px;
-    box-shadow: 0 2px 5px rgb(0, 0, 0,0.1);
-    margin: 10px 0;
+    padding: 10px;
+    border-radius: 7px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
 }
-/* card de task */
-.card-title{
-    position: absolute;
-    top: 10px;
-    left: 15px;
-    margin: 0;
-    font-size: 15px;
+.column .card .info{
+    font-size: 16px;
+    color: var(--color-font);
+    display: flex;
+    flex-direction: column;
 }
-.fav{
+.fav {
     position: absolute;
     top: 10px;
     right: 15px;
     margin: 0;
 }
+
 /* icone de favoritar */
-.add{
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    background-color: var(--color1);
-    padding: 10px;
-    border-radius: 50%;
-}
-.settings{
+
+
+.settings {
     position: absolute;
     bottom: 10px;
     font-size: 25px;
 }
+
 /* icone de adicionar mais cards */
+#modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.box {
+    background-color: var(--color1);
+    width: 600px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#modal .box .head {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--color4);
+}
+
+#modal .box .head span {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-font);
+}
+
+#modal .box .head button {
+
+    background: none;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-font);
+    cursor: pointer;
+}
+
+#modal .box .form {
+    padding: 20px;
+}
+
+#modal .box .form .form-group {
+    margin-bottom: 15px;
+}
+
+#modal .box .form label {
+    display: block;
+    font-size: 14px;
+    color: var(--color-font);
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+#modal .box .form textarea {
+    width: 100%;
+
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: var(--color4);
+
+    color: var(--color-font);
+}
+
+#modal .box .form select {
+    width: 20%;
+    font-size: 14px;
+    color: var(--color-font);
+    background-color: var(--color4);
+
+
+    padding: 5px;
+}
+
+#modal .box .form input {
+    width: 20%;
+    font-size: 14px;
+    color: var(--color-font);
+    background-color: var(--color4);
+
+
+    padding: 5px;
+}
+
+.btm-wrapper {
+    text-align: center;
+    width: 100%;
+}
+
+#modal .box .form-add {
+    width: 30%;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: var(--color4);
+
+
+    color: var(--color-font);
+    padding: 10px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+#modal .box .head button,
+#modal .box .form-add,
+#modal .box .form input,
+#modal .box .form textarea,
+#modal .box .form select {
+    border: none;
+    border-radius: 7px;
+}
