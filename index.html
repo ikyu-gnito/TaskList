@@ -65,10 +65,12 @@
     <div id="modal">
       <div class="box">
         <div class="head">
-          <span>Nova Tarefa</span>
-          <button onclick="closeModal()">X</button>
+          <span id="createTitle">Nova Tarefa</span>
+          <span id="editTitle">Editar tarefa</span>
+          <i class="fa-solid fa-rectangle-xmark xmark" onclick="closeModal()"></i>
         </div>
         <div class="form">
+          <input type="hidden" id="idInput">
           <div class="form-grouo">
             <label for="priority">Priodidade</label>
             <select id="priority">
@@ -88,11 +90,14 @@
           </div>
 
           <div class="btm-wrapper">
-            <button class="form-add" onclick="createTask()">Adicionar</button>
+            <button class="form-add" onclick="createTask()" id="addTask">Adicionar</button>
+            <button class="form-add" onclick="updateTask()" id="editTask">Salvar alterações</button>
           </div>
         </div>
       </div>
     </div>
+
+    <script src="moment.min.js"></script>
     <script src="script.js"></script>
 </body>
 
