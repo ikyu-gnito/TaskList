@@ -54,7 +54,7 @@ function generateCard(){
     const todoListhtml = todoList.map(function(task){
         const formatedDate = moment(task.deadline).format('DD/MM/YYYY')
         return `
-            <div class = "card" ondblclick ="openModal(${task.id})">
+            <div class = "card" ondblclick ="openModal(${task.id})" draggable = "true" ondragstart = "dragstart_handler(event)">
                 <div class = "info">
                     <b>Prioridade:</b>
                     <span>${task.priority}</span>
@@ -104,4 +104,9 @@ function updateTask(){
 
     closeModal();
     generateCard();
+}
+
+function dragstart_handler(ev){
+    ev.dataTransfer.setData("application/my-app", ev.target.id);
+    ev.dataTransfer.effectAllowed = "move";
 }
