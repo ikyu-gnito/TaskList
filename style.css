@@ -288,3 +288,8 @@ body {
 .delete-btn:hover {
     color: var(--color-red);
 }
+
+.edit-btn:hover {
+    background-color: var(--color4);
+    color: white;
+}

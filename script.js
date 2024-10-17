@@ -85,7 +85,7 @@ function createTask() {
       status: 'todo'
     };
     todoList.push(newTask);
-  
+    saveToLocalStorage();
     closeModal();
     renderAllTasks();
   }
@@ -101,6 +101,7 @@ function updateTask() {
         deadline: $deadlineInput.value,
         description: $descriptionInput.value
       };
+      saveToLocalStorage();
     }
   
     closeModal();
@@ -134,6 +135,7 @@ function updateTaskStatus(taskId, newStatus) {
   const index = todoList.findIndex((task) => task.id == taskId);
   if (index !== -1) {
     todoList[index].status = newStatus;
+    saveToLocalStorage();
   }
   renderAllTasks();
 }
@@ -153,7 +155,23 @@ function renderAllTasks() {
         const index = todoList.findIndex(task => task.id === id);
         if (index !== -1) {
             todoList.splice(index, 1);
+            saveToLocalStorage();
             renderAllTasks();
         }
     }
 }
+
+
+function saveToLocalStorage() {
+    localStorage.setItem('todoList', JSON.stringify(todoList));
+}
+
+function loadFromLocalStorage() {
+    const savedTodoList = localStorage.getItem('todoList');
+    if (savedTodoList) {
+        todoList = JSON.parse(savedTodoList);
+        renderAllTasks();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadFromLocalStorage);
