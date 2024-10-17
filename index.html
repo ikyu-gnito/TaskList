@@ -41,19 +41,19 @@
         <i class="fa fa-add"></i>
         <span>Nova Tarefa</span>
       </div>
-      <div class="column" id="todoColumn">
+      <div class="column" id="todoColumn" ondrop="drop(event)" ondragover="allowDrop(event)">
         <div class="head">
           <span>To do</span>
         </div>
         <div class="body"></div>
       </div>
-      <div class="column">
+      <div class="column" id="inProgressColumn" ondrop="drop(event)" ondragover="allowDrop(event)">
         <div class="head">
           <span>In Progress</span>
         </div>
         <div class="body"></div>
       </div>
-      <div class="column">
+      <div class="column" id="doneColumn" ondrop="drop(event)" ondragover="allowDrop(event)">
         <div class="head">
           <span>Done</span>
         </div>
