@@ -281,7 +281,6 @@ body {
 
 .edit-btn, .delete-btn {
     cursor: pointer;
-    padding: 2px 5px;
     border-radius: 3px;
 }
 
@@ -290,6 +289,5 @@ body {
 }
 
 .edit-btn:hover {
-    background-color: var(--color4);
-    color: white;
+    text-decoration: underline;
 }
