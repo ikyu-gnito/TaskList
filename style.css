@@ -4,6 +4,7 @@
     --color3: #1E1E1C;
     --color4: #535353;
     --color-font: #E8E8E8;
+    --color-red: rgb(236, 96, 96);
 }
 
 * {
@@ -270,4 +271,23 @@ body {
 #modal .box .form select {
     border: none;
     border-radius: 7px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.edit-btn, .delete-btn {
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.delete-btn:hover {
+    color: var(--color-red);
+}
+
+.edit-btn:hover {
+    text-decoration: underline;
 }
