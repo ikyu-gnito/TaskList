@@ -1,239 +1,177 @@
-const toDoColumn = document.getElementById('to-do');
-            const inProgressColumn = document.getElementById('in-progress');
-            const doneColumn = document.getElementById('done');
-            const draggableTask = document.getElementById('draggable-task');
-            const newTaskInput = document.getElementById('new-task-input');
-            const addTaskButton = document.getElementById('add-task-button');
-            const newTaskInputInProgress = document.getElementById('new-task-input-in-progress');
-            const addTaskButtonInProgress = document.getElementById('add-task-button-in-progress');
-            const newTaskInputDone = document.getElementById('new-task-input-done');
-            const addTaskButtonDone = document.getElementById('add-task-button-done');
+const $modal = document.getElementById("modal");
+const $priorityInput = document.getElementById("priority");
+const $deadlineInput = document.getElementById("deadline");
+const $descriptionInput = document.getElementById("description");
+const $todoColumn = document.querySelector("#todoColumn .body");
+const $idInput = document.getElementById("idInput");
+const $createTitle = document.getElementById("createTitle");
+const $editTitle = document.getElementById("editTitle");
+const $addTask = document.getElementById("addTask");
+const $editTask = document.getElementById("editTask");
 
-            let draggedTask = null;
- let activeColumn = null;
+// lista que vai receber os valores das tasks
+var todoList = [];
 
-            // Adiciona event listeners para arrastar e soltar
-            toDoColumn.addEventListener('dragover', (event) => {
-                event.preventDefault();
-                activeColumn = toDoColumn;
-            });
+function openModal(id) {
+    $modal.style.display = "flex";
+  
+    if (id) {
+      $createTitle.style.display = "none";
+      $editTitle.style.display = "block";
+      $addTask.style.display = "none";
+      $editTask.style.display = "block";
+  
+      const task = todoList.find(task => task.id === id);
+  
+      if (task) {
+        $idInput.value = task.id;
+        $descriptionInput.value = task.description;
+        $priorityInput.value = task.priority;
+        $deadlineInput.value = task.deadline;
+      }
+    } else {
+      $createTitle.style.display = "block";
+      $editTitle.style.display = "none";
+      $addTask.style.display = "block";
+      $editTask.style.display = "none";
+  
+      $idInput.value = "";
+      $descriptionInput.value = "";
+      $priorityInput.value = "";
+      $deadlineInput.value = "";
+    }
+  }
 
-            inProgressColumn.addEventListener('dragover', (event) => {
-                event.preventDefault();
-                activeColumn = inProgressColumn;
-            });
+function closeModal() {
+  $modal.style.display = "none";
 
-            doneColumn.addEventListener('dragover', (event) => {
-                event.preventDefault();
-                activeColumn = doneColumn;
-            });
+  $idInput.value = "";
+  $descriptionInput.value = "";
+  $priorityInput.value = "";
+  $deadlineInput.value = "";
+}
 
-            // Event listener para iniciar o arrasto
-            toDoColumn.addEventListener('dragstart', (event) => {
-                if (event.target.classList.contains('task')) {
-                    draggedTask = event.target;
-                    draggableTask.innerHTML = draggedTask.innerHTML;
-                    draggableTask.style.width = draggedTask.offsetWidth + 'px';
-                    draggableTask.style.height = draggedTask.offsetHeight + 'px';
-                    draggableTask.style.display = 'block';
-                    draggedTask.classList.add('active');
-                }
-            });
+function generateCard(task) {
+    const formatedDate = moment(task.deadline).format('DD/MM/YYYY');
+    return `
+      <div class="card" id="task-${task.id}" data-id="${task.id}" draggable="true" ondragstart="drag(event)">
+        <div class="card-header">
+          <span class="edit-btn" onclick="openModal(${task.id})">Editar</span>
+          <span class="delete-btn" onclick="deleteTask(${task.id})"><i class="fa-solid fa-rectangle-xmark xmark"></i></span>
+        </div>
+        <div class="info">
+          <b>Prioridade:</b>
+          <span>${task.priority}</span>
+        </div>
+        <div class="info">
+          <b>Prazo:</b>
+          <span>${formatedDate}</span>
+        </div>
+        <div class="info">
+          <b>Descrição:</b>
+          <span>${task.description}</span>
+        </div>
+      </div>
+    `;
+}
 
-            inProgressColumn.addEventListener('dragstart', (event) => {
-                if (event.target.classList.contains('task')) {
-                    draggedTask = event.target;
-                    draggableTask.innerHTML = draggedTask.innerHTML;
-                    draggableTask.style.width = draggedTask.offsetWidth + 'px';
-                    draggableTask.style.height = draggedTask.offsetHeight + 'px';
-                    draggableTask.style.display = 'block';
-                    draggedTask.classList.add('active');
-                }
-            });
+// cria task e adiciona na lista
+function createTask() {
+    const newTask = {
+      id: Date.now(), // Usa timestamp como ID para garantir unicidade
+      priority: $priorityInput.value,
+      deadline: $deadlineInput.value,
+      description: $descriptionInput.value,
+      status: 'todo'
+    };
+    todoList.push(newTask);
+    saveToLocalStorage();
+    closeModal();
+    renderAllTasks();
+  }
 
-            doneColumn.addEventListener('dragstart', (event) => {
-                if (event.target.classList.contains('task')) {
-                    draggedTask = event.target;
-                    draggableTask.innerHTML = draggedTask.innerHTML;
-                    draggableTask.style.width = draggedTask.offsetWidth + 'px';
-                    draggableTask.style.height = draggedTask.offsetHeight + 'px';
-                    draggableTask.style.display = 'block';
-                    draggedTask.classList.add('active');
-                }
-            });
+function updateTask() {
+    const taskId = Number($idInput.value);
+    const index = todoList.findIndex(task => task.id === taskId);
+    
+    if (index !== -1) {
+      todoList[index] = {
+        ...todoList[index],
+        priority: $priorityInput.value,
+        deadline: $deadlineInput.value,
+        description: $descriptionInput.value
+      };
+      saveToLocalStorage();
+    }
+  
+    closeModal();
+    renderAllTasks();
+  }
 
-            // Event listener para o arrasto
-            document.addEventListener('dragover', (event) => {
-                event.preventDefault();
-                draggableTask.style.left = event.clientX + 'px';
-                draggableTask.style.top = event.clientY + 'px';
-            });
+function allowDrop(ev) {
+  ev.preventDefault();
+}
 
-            // Event listener para soltar o arrasto
-            document.addEventListener('drop', (event) => {
-                event.preventDefault();
-                if (activeColumn) {
-                    activeColumn.appendChild(draggedTask);
-                    draggedTask.classList.remove('active');
-                    draggableTask.style.display = 'none';
-                }
-            });
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
 
-            document.addEventListener('dragend', () => {
-                draggedTask.classList.remove('active');
-                draggableTask.style.display = 'none';
-            });
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  var draggedElement = document.getElementById(data);
+  ev.target
+    .closest(".column")
+    .querySelector(".body")
+    .appendChild(draggedElement);
 
-            // Adicionar nova tarefa
-            addTaskButton.addEventListener('click', () => {
-                const taskTitle = newTaskInput.value;
-                if (taskTitle) {
-                    const newTask = document.createElement('div');
-                    newTask.classList.add('task');
-                    newTask.innerHTML = `
-                        <div class="title">${taskTitle}</div>
-                        <div class="tag" contenteditable="true">Tag</div>
-                        <button class="edit-button">Editar</button>
-                        <button class="delete-button">Excluir</button>
-                    `;
-                    newTask.setAttribute('draggable', 'true');
+  // Atualizar o status da tarefa na lista
+  const taskId = draggedElement.getAttribute("data-id");
+  const newStatus = ev.target.closest(".column").id.replace("Column", "");
+  updateTaskStatus(taskId, newStatus);
+}
 
-                    toDoColumn.appendChild(newTask);
-                    newTaskInput.value = '';
+function updateTaskStatus(taskId, newStatus) {
+  const index = todoList.findIndex((task) => task.id == taskId);
+  if (index !== -1) {
+    todoList[index].status = newStatus;
+    saveToLocalStorage();
+  }
+  renderAllTasks();
+}
 
-                    // Adiciona event listeners para editar e excluir tarefas
-                    newTask.addEventListener('dragstart', (event) => {
-                        draggedTask = event.target;
-                        draggableTask.innerHTML = draggedTask.innerHTML;
-                        draggableTask.style.width = draggedTask.offsetWidth + 'px';
-                        draggableTask.style.height = draggedTask.offsetHeight + 'px';
-                        draggableTask.style.display = 'block';
-                        draggedTask.classList.add('active');
-                    });
+function renderAllTasks() {
+    const todoTasks = todoList.filter(task => task.status === 'todo');
+    const inProgressTasks = todoList.filter(task => task.status === 'inProgress');
+    const doneTasks = todoList.filter(task => task.status === 'done');
+  
+    document.querySelector('#todoColumn .body').innerHTML = todoTasks.map(generateCard).join('');
+    document.querySelector('#inProgressColumn .body').innerHTML = inProgressTasks.map(generateCard).join('');
+    document.querySelector('#doneColumn .body').innerHTML = doneTasks.map(generateCard).join('');
+  }
 
-                    newTask.querySelector('.edit-button').addEventListener('click', () => {
-                        const taskTitleInput = document.createElement('input');
-                        taskTitleInput.type = 'text';
-                        taskTitleInput.value = newTask.querySelector('.title').textContent;
-                        taskTitleInput.style.width = '100%';
+  function deleteTask(id) {
+    if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+        const index = todoList.findIndex(task => task.id === id);
+        if (index !== -1) {
+            todoList.splice(index, 1);
+            saveToLocalStorage();
+            renderAllTasks();
+        }
+    }
+}
 
-                        const saveButton = document.createElement('button');
-                        saveButton.textContent = 'Salvar';
-                        saveButton.addEventListener('click', () => {
-                            newTask.querySelector('.title').textContent = taskTitleInput.value;
-                            newTask.removeChild(taskTitleInput);
-                            newTask.removeChild(saveButton);
-                        });
 
-                        newTask.querySelector('.title').textContent = '';
-                        newTask.appendChild(taskTitleInput);
-                        newTask.appendChild(saveButton);
-                    });
+function saveToLocalStorage() {
+    localStorage.setItem('todoList', JSON.stringify(todoList));
+}
 
-                    newTask.querySelector('.delete-button').addEventListener('click', () => {
-                        toDoColumn.removeChild(newTask);
-                    });
-                }
-            });
+function loadFromLocalStorage() {
+    const savedTodoList = localStorage.getItem('todoList');
+    if (savedTodoList) {
+        todoList = JSON.parse(savedTodoList);
+        renderAllTasks();
+    }
+}
 
-            addTaskButtonInProgress.addEventListener('click', () => {
-                const taskTitle = newTaskInputInProgress.value;
-                if (taskTitle) {
-                    const newTask = document.createElement('div');
-                    newTask.classList.add('task');
-                    newTask.innerHTML = `
-                        <div class="title">${taskTitle}</div>
-                        <div class="tag" contenteditable="true"> Tag</div>
-                        <button class="edit-button">Editar</button>
-                        <button class="delete-button">Excluir</button>
-                    `;
-                    newTask.setAttribute('draggable', 'true');
-
-                    inProgressColumn.appendChild(newTask);
-                    newTaskInputInProgress.value = '';
-
-                    // Adiciona event listeners para editar e excluir tarefas
-                    newTask.addEventListener('dragstart', (event) => {
-                        draggedTask = event.target;
-                        draggableTask.innerHTML = draggedTask.innerHTML;
-                        draggableTask.style.width = draggedTask.offsetWidth + 'px';
-                        draggableTask.style.height = draggedTask.offsetHeight + 'px';
-                        draggableTask.style.display = 'block';
-                        draggedTask.classList.add('active');
-                    });
-
-                    newTask.querySelector('.edit-button').addEventListener('click', () => {
-                        const taskTitleInput = document.createElement('input');
-                        taskTitleInput.type = 'text';
-                        taskTitleInput.value = newTask.querySelector('.title').textContent;
-                        taskTitleInput.style.width = '100%';
-
-                        const saveButton = document.createElement('button');
-                        saveButton.textContent = 'Salvar';
-                        saveButton.addEventListener('click', () => {
-                            newTask.querySelector('.title').textContent = taskTitleInput.value;
-                            newTask.removeChild(taskTitleInput);
-                            newTask.removeChild(saveButton);
-                        });
-
-                        newTask.querySelector('.title').textContent = '';
-                        newTask.appendChild(taskTitleInput);
-                        newTask.appendChild(saveButton);
-                    });
-
-                    newTask.querySelector('.delete-button').addEventListener('click', () => {
-                        inProgressColumn.removeChild(newTask);
-                    });
-                }
-            });
-
-            addTaskButtonDone.addEventListener('click', () => {
-                const taskTitle = newTaskInputDone.value;
-                if (taskTitle) {
-                    const newTask = document.createElement('div');
-                    newTask.classList.add('task');
-                    newTask.innerHTML = `
-                        <div class="title">${taskTitle}</div>
-                        <div class="tag" contenteditable="true">Tag</div>
-                        <button class="edit-button">Editar</button>
-                        <button class="delete-button">Excluir</button>
-                    `;
-                    newTask.setAttribute('draggable', 'true');
-
-                    doneColumn.appendChild(newTask);
-                    newTaskInputDone.value = '';
-
-                    // Adiciona event listeners para editar e excluir tarefas
-                    newTask.addEventListener('dragstart', (event) => {
-                        draggedTask = event.target;
-                        draggableTask.innerHTML = draggedTask.innerHTML;
-                        draggableTask.style.width = draggedTask.offsetWidth + 'px';
-                        draggableTask.style.height = draggedTask.offsetHeight + 'px';
-                        draggableTask .style.display = 'block';
-                        draggedTask.classList.add('active');
-                    });
-
-                    newTask.querySelector('.edit-button').addEventListener('click', () => {
-                        const taskTitleInput = document.createElement('input');
-                        taskTitleInput.type = 'text';
-                        taskTitleInput.value = newTask.querySelector('.title').textContent;
-                        taskTitleInput.style.width = '100%';
-
-                        const saveButton = document.createElement('button');
-                        saveButton.textContent = 'Salvar';
-                        saveButton.addEventListener('click', () => {
-                            newTask.querySelector('.title').textContent = taskTitleInput.value;
-                            newTask.removeChild(taskTitleInput);
-                            newTask.removeChild(saveButton);
-                        });
-
-                        newTask.querySelector('.title').textContent = '';
-                        newTask.appendChild(taskTitleInput);
-                        newTask.appendChild(saveButton);
-                    });
-
-                    newTask.querySelector('.delete-button').addEventListener('click', () => {
-                        doneColumn.removeChild(newTask);
-                    });
-                }
-            });
+document.addEventListener('DOMContentLoaded', loadFromLocalStorage);
