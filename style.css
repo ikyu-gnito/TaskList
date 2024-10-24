@@ -1,185 +1,293 @@
-body {
-    background-color: #222;
-    color: #fff;
-    font-family: sans-serif;
-    display: flex;
-    height: 100vh;
+:root {
+    --color1: #343433;
+    --color2: #171717;
+    --color3: #1E1E1C;
+    --color4: #535353;
+    --color-font: #E8E8E8;
+    --color-red: rgb(236, 96, 96);
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    outline: none;
+}
+
+body {
+    display: flex;
+    background-color: var(--color3);
+    color: var(--color-font);
+}
+
+/* corpo do proojeto */
 
 .container {
     display: flex;
     width: 100%;
-    padding: 20px;
-    gap: 20px;
+    height: 100vh;
 }
 
 .sidebar {
-    width: 200px;
-    padding: 20px;
-    background-color: #333;
-    border-radius: 8px;
-}
-
-.sidebar h2 {
-    margin-bottom: 10px;
-}
-
-.sidebar .areas-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.areas-container input {
-    border: none;
-    background-color: transparent;
-    color: #fff;
-    padding: 5px;
-    margin-left: 10px;
-}
-
-.kanban-board {
-    display: flex;
-    gap: 20px;
-    flex-grow: 1;
-}
-
-.column {
-    background-color: #333;
-    padding: 20px;
-    border-radius: 8px;
-    flex: 1;
-    min-width: 250px;
-}
-
-.task {
-    background-color: #444;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    cursor: move;
-    display: flex;
-    align-items: center;
     position: relative;
+    width: 20%;
+    background-color: var(--color3);
+    color: white;
+    padding: 20px;
+    border-right: 1px solid var(--color1);
 }
 
-.task .title {
-    flex-grow: 1;
-    margin-left: 10px;
-    user-select: none;
+/* menu lateral */
+
+.sidebar ul {
+    width: 100%;
+    list-style: none;
+    padding: 15px 0 0 15px;
 }
 
-.task .tag {
-    background-color: #555;
-    padding: 5px 10px;
-    border-radius: 4px;
-    margin-right: 10px;
-    color: #fff;
+.sidebar ul li {
+    margin: 10px 0;
+    font-size: 12px;
+    width: 100%;
 }
 
-.task .edit-button,
-.task .delete-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: #fff;
-    padding: 5px 10px;
-    margin-left: 10px;
-    font-size: 14px;
-    display: none;
+.sidebar ul li a {
+    position: relative;
+    color: var(--color-font);
+    text-decoration: none;
 }
 
-.task:hover .edit-button,
-.task:hover .delete-button {
-    display: block;
+.sidebar-title {
+    width: 100%;
+    position: relative;
+    border-bottom: var(--color-font) solid 1px;
+    font-size: 10px;
 }
 
-.task.active {
-    background-color: #555;
-}
-
-.task.active .title {
-    color: #fff;
-}
-
-.task.active .tag {
-    background-color: #666;
-}
-
-.draggable {
-    display: none;
+.sidebar-add {
     position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    background-color: #444;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    opacity: 0.8;
-}
-
-.draggable .title {
-    flex-grow: 1;
-    margin-left: 10px;
-}
-
-.draggable .tag {
-    background-color: #555;
-    padding: 5px 10px;
-    border-radius: 4px;
-    margin-right: 10px;
-    color: #fff;
-}
-
-.draggable.active {
-    background-color: #555;
-}
-
-.draggable.active .title {
-    color: #fff;
-}
-
-.draggable.active .tag {
-    background-color: #666;
-}
-
-.column.active {
-    background-color: #444;
-}
-
-.column.active .task {
-    background-color: #555;
-}
-
-.column.active .task.active {
-    background-color: #666;
-}
-
-.column.active .task .tag {
-    background-color: #777;
-}
-
-.new-task-form {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.new-task-form input {
-    border: none;
-    background-color: transparent;
-    color: #fff;
-    padding: 5px;
-    margin-left: 10px;
-    flex-grow: 1;
-}
-
-.new-task-form button {
-    background-color: #555;
-    color: #fff;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
+    right: 0px;
+    bottom: 3px;
+    font-size: 12px;
     cursor: pointer;
+}
+
+/*Áreas de trabalho e icone de adicionar pasta*/
+.folder {
+    padding: 0 7px 0 0;
+}
+
+.folder-settings {
+    padding-left: 88px;
+    cursor: pointer;
+}
+
+.engine {
+    font-size: 25px;
+    position: absolute;
+    bottom: 5%;
+}
+
+.button {
+    position: absolute;
+    right: 10%;
+    top: 1.5%;
+    background-color: var(--color1);
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.button i,
+.button span {
+    font-size: 14px;
+}
+
+/* conteudos do menu lateral ^^^^*/
+.main-content {
+    display: flex;
+    width: 80%;
+    margin-top: 70px;
+    gap: 65px;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-content .column {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 100%;
+    background-color: var(--color2);
+    border-radius: 7px;
+}
+
+.main-content .column .head {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 20px;
+}
+
+.main-content .column .body {
+    display: flex;
+    flex-direction: column;
+    font-size: 15px;
+    padding: 20px;
+    gap: 20px;
+}
+
+.main-content .column .body .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--color4);
+    padding: 10px;
+    border-radius: 7px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.column .card .info{
+    font-size: 16px;
+    color: var(--color-font);
+    display: flex;
+    flex-direction: column;
+}
+.fav {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    margin: 0;
+}
+
+.main-content .column .body .card .info {}
+
+#modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.box {
+    background-color: var(--color1);
+    width: 600px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#modal .box .head {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--color4);
+}
+
+#modal .box .head span {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-font);
+}
+
+#modal .box .head .xmark{
+    font-size: 30px;
+    color: rgb(236, 96, 96);
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+#modal .box .form {
+    padding: 20px;
+}
+
+#modal .box .form .form-group {
+    margin-bottom: 15px;
+}
+
+#modal .box .form label {
+    display: block;
+    font-size: 14px;
+    color: var(--color-font);
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+#modal .box .form textarea {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: var(--color4);
+    color: var(--color-font);
+}
+
+#modal .box .form select {
+    width: 20%;
+    font-size: 14px;
+    color: var(--color-font);
+    background-color: var(--color4);
+    padding: 5px;
+}
+
+#modal .box .form input {
+    width: 20%;
+    font-size: 14px;
+    color: var(--color-font);
+    background-color: var(--color4);
+    padding: 5px;
+}
+
+.btm-wrapper {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+#modal .box .form-add {
+    width: 30%;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: var(--color4);
+    color: var(--color-font);
+    padding: 10px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+#modal .box .head button,
+#modal .box .form-add,
+#modal .box .form input,
+#modal .box .form textarea,
+#modal .box .form select {
+    border: none;
+    border-radius: 7px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.edit-btn, .delete-btn {
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.delete-btn:hover {
+    color: var(--color-red);
+}
+
+.edit-btn:hover {
+    text-decoration: underline;
 }
