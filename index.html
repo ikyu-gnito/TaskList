@@ -1,53 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanban Board</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskList</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet" />
 </head>
+
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h2>Áreas de trabalho</h2>
-            <div class="areas-container">
-                <input type="text" placeholder="Nova área">
-            </div>
-            <div class="areas-container">
-                <input type="checkbox" id="pasta1">
-                <label for="pasta1">Pasta 1</label>
-            </div>
-            <div class="areas-container">
-                <input type="checkbox" id="pasta2">
-                <label for="pasta2">Pasta 2</label>
-            </div>
+  <div class="container">
+    <!-- menu lateral -->
+    <nav class="sidebar">
+      <div class="sidebar-title">
+        <h1>Áreas de trabalho</h1>
+        <i class="fa fa-add sidebar-add"></i>
+      </div>
+      <ul>
+        <li>
+          <i class="fa fa-folder folder"></i><a href="#">Pasta 1</a><i class="fa fa-ellipsis-h folder-settings"></i>
+        </li>
+        <li>
+          <i class="fa fa-folder folder"></i><a href="#">Pasta 2</a><i class="fa fa-ellipsis-h folder-settings"></i>
+        </li>
+        <li>
+          <i class="fa fa-folder folder"></i><a href="#">Pasta 3</a><i class="fa fa-ellipsis-h folder-settings"></i>
+        </li>
+      </ul>
+      <i class="fa fa-cog engine"></i>
+    </nav>
+    <!-- conteúdo principal (colunas) -->
+    <div class="main-content">
+      <div class="button" onclick="openModal()">
+        <i class="fa fa-add"></i>
+        <span>Nova Tarefa</span>
+      </div>
+      <div class="column" id="todoColumn" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="head">
+          <span>To do</span>
         </div>
-        <div class="kanban-board">
-            <div class="column" id="to-do">
-                <h3>To do</h3>
-                <div class="new-task-form">
-                    <input type="text" id="new-task-input" placeholder="Nova tarefa">
-                    <button id="add-task-button">+</button>
-                </div>
-            </div>
-            <div class="column" id="in-progress">
-                <h3>In progress</h3>
-                <div class="new-task-form">
-                    <input type="text" id="new-task-input-in-progress" placeholder="Nova tarefa">
-                    <button id="add-task-button-in-progress">+</button>
-                </div>
-            </div>
-            <div class="column" id="done">
-                <h3>Done</h3>
-                <div class="new-task-form">
-                    <input type="text" id="new-task-input-done" placeholder="Nova tarefa">
-                    <button id="add-task-button-done">+</button>
-                </div>
-            </div>
+        <div class="body"></div>
+      </div>
+      <div class="column" id="inProgressColumn" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="head">
+          <span>In Progress</span>
         </div>
+        <div class="body"></div>
+      </div>
+      <div class="column" id="doneColumn" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="head">
+          <span>Done</span>
+        </div>
+        <div class="body"></div>
+      </div>
+    </div>
+    <!-- colunas -->
+    <!-- Modal do card -->
+    <div id="modal">
+      <div class="box">
+        <div class="head">
+          <span id="createTitle">Nova Tarefa</span>
+          <span id="editTitle">Editar tarefa</span>
+          <i class="fa-solid fa-rectangle-xmark xmark" onclick="closeModal()"></i>
+        </div>
+        <div class="form">
+          <input type="hidden" id="idInput">
+          <div class="form-grouo">
+            <label for="priority">Priodidade</label>
+            <select id="priority">
+              <option>Baixa</option>
+              <option>Média</option>
+              <option>Alta</option>
+            </select>
+          </div>
 
-        <div class="draggable" id="draggable-task"></div>
+          <div class="form-group">
+            <label for="deadline">Prazo</label>
+            <input type="date" id="deadline" />
+          </div>
+          <div class="form-group">
+            <label for="description">Descrição</label>
+            <textarea id="description" rows="5"></textarea>
+          </div>
 
-        <script src="script.js"></script>
-    </body>
+          <div class="btm-wrapper">
+            <button class="form-add" onclick="createTask()" id="addTask">Adicionar</button>
+            <button class="form-add" onclick="updateTask()" id="editTask">Salvar alterações</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="moment.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
 </html>
