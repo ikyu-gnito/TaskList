@@ -23,58 +23,62 @@ function closeNewTabModal() {
 
 
 function openModal(id) {
-    $modal.style.display = "flex";
-  
-    if (id) {
-      $createTitle.style.display = "none";
-      $editTitle.style.display = "block";
-      $addTask.style.display = "none";
-      $editTask.style.display = "block";
-  
-      const task = todoList.find(task => task.id === id);
-  
-      if (task) {
-        $idInput.value = task.id;
-        $descriptionInput.value = task.description;
-        $priorityInput.value = task.priority;
-        $deadlineInput.value = task.deadline;
-      }
-    } else {
-      $createTitle.style.display = "block";
-      $editTitle.style.display = "none";
-      $addTask.style.display = "block";
-      $editTask.style.display = "none";
-  
-      $idInput.value = "";
-      $descriptionInput.value = "";
-      $priorityInput.value = "";
-      $deadlineInput.value = "";
+  $modal.style.display = "flex";
+
+  if (id) {
+    $createTitle.style.display = "none";
+    $editTitle.style.display = "block";
+    $addTask.style.display = "none";
+    $editTask.style.display = "block";
+
+    const task = todoList[currentTabId].tasks.find(task => task.id === id);
+
+    if (task) {
+      $idInput.value = task.id;
+      $descriptionInput.value = task.description;
+      $priorityInput.value = task.priority;
+      $deadlineInput.value = task.deadline;
     }
+  } else {
+    $createTitle.style.display = "block";
+    $editTitle.style.display = "none";
+    $addTask.style.display = "block";
+    $editTask.style.display = "none";
+
+    $idInput.value = "";
+    $descriptionInput.value = "";
+    $priorityInput.value = "";
+    $deadlineInput.value = "";
   }
+}
 
   function createTab() {
     const tabName = document.getElementById('tabName').value;
     if (tabName) {
       const tabId = tabs.length;
-      tabs.push({ name: tabName, tasks: [] });
+      tabs.push({ id: tabId, name: tabName, tasks: [] });
+      todoList.push({ id: tabId, tasks: [] });
       renderTabs();
       closeNewTabModal();
-      document.getElementById('tabName').value = '';
     }
     selectTab(tabs.length - 1); // seleciona a última aba criada
   }
   
   function renderTabs() {
-    const tabList = document.getElementById('tabList');
-    tabList.innerHTML = ''; // Limpa as abas existentes
-
+    const $tabList = document.getElementById('tabList');
+    $tabList.innerHTML = '';
+  
     tabs.forEach((tab, index) => {
-        const tabItem = document.createElement('li');
-        tabItem.textContent = tab.name; // Nome da aba
-        tabItem.onclick = () => selectTab(index); // Chama a função selectTab com o índice da aba
-        tabList.appendChild(tabItem); // Adiciona a aba à lista
+      const $tab = document.createElement('li');
+      $tab.textContent = tab.name;
+      $tab.addEventListener('click', () => {
+        currentTabId = index;
+        renderAllTasks();
+      });
+      $tabList.appendChild($tab);
     });
 }
+
   function selectTab(tabId) {
     currentTabId = tabId; // Define a aba atualmente selecionada
     renderAllTasks(); // Renderiza as tarefas da aba selecionada
@@ -116,16 +120,18 @@ function generateCard(task) {
 // cria task e adiciona na lista
 function createTask() {
   const newTask = {
-      id: Date.now(), // Usa timestamp como ID para garantir unicidade
-      priority: $priorityInput.value,
-      deadline: $deadlineInput.value,
-      description: $descriptionInput.value,
-      status: 'todo'
+    id: Date.now(),
+    priority: $priorityInput.value,
+    deadline: $deadlineInput.value,
+    description: $descriptionInput.value,
+    status: 'todo'
   };
 
-  // Adiciona a nova tarefa à aba atualmente selecionada
   if (currentTabId !== null) {
-      todoList[currentTabId].tasks.push(newTask);
+    todoList[currentTabId].tasks.push(newTask);
+  } else {
+    alert("Selecione uma aba antes de criar uma tarefa.");
+    return;
   }
 
   saveToLocalStorage();
@@ -134,22 +140,19 @@ function createTask() {
 }
 
 function updateTask() {
-    const taskId = Number($idInput.value);
-    const index = todoList.findIndex(task => task.id === taskId);
-    
-    if (index !== -1) {
-      todoList[index] = {
-        ...todoList[index],
-        priority: $priorityInput.value,
-        deadline: $deadlineInput.value,
-        description: $descriptionInput.value
-      };
-      saveToLocalStorage();
-    }
-  
-    closeModal();
-    renderAllTasks();
+  const id = $idInput.value;
+  const task = todoList[currentTabId].tasks.find(task => task.id === parseInt(id));
+
+  if (task) {
+    task.description = $descriptionInput.value;
+    task.priority = $priorityInput.value;
+    task.deadline = $deadlineInput.value;
   }
+
+  saveToLocalStorage();
+  closeModal();
+  renderAllTasks();
+}
 
 function allowDrop(ev) {
   ev.preventDefault();
@@ -185,15 +188,26 @@ function updateTaskStatus(taskId, newStatus) {
   }
 }
 function renderAllTasks() {
-  if (currentTabId !== null) {
-    const currentTabTasks = todoList[currentTabId].tasks;
-    const todoTasks = currentTabTasks.filter(task => task.status === 'todo');
-    const inProgressTasks = currentTabTasks.filter(task => task.status === 'inProgress');
-    const doneTasks = currentTabTasks.filter(task => task.status === 'done');
+  $todoColumn.innerHTML = '';
+  $inProgressColumn.innerHTML = '';
+  $doneColumn.innerHTML = '';
 
-    document.querySelector('#todoColumn .body').innerHTML = todoTasks.map(generateCard).join('');
-    document.querySelector('#inProgressColumn .body').innerHTML = inProgressTasks.map(generateCard).join('');
-    document.querySelector('#doneColumn .body').innerHTML = doneTasks.map(generateCard).join('');
+  if (currentTabId !== null) {
+    todoList[currentTabId].tasks.forEach(task => {
+      const $task = document.createElement('div');
+      $task.textContent = task.description;
+      switch (task.status) {
+        case 'todo':
+          $todoColumn.appendChild($task);
+          break;
+        case 'inProgress':
+          $inProgressColumn.appendChild($task);
+          break;
+        case 'done':
+          $doneColumn.appendChild($task);
+          break;
+      }
+    });
   }
 }
 
@@ -224,8 +238,10 @@ function loadFromLocalStorage() {
   }
   if (savedTodoList) {
       todoList = JSON.parse(savedTodoList);
-      renderAllTasks();
+  } else {
+      todoList = tabs.map(tab => ({ id: tab.id, tasks: [] })); // Inicialize aqui
   }
+  renderAllTasks();
 }
 
 document.addEventListener('DOMContentLoaded', loadFromLocalStorage);
