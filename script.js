@@ -9,12 +9,18 @@ const $editTitle = document.getElementById("editTitle");
 const $addTask = document.getElementById("addTask");
 const $editTask = document.getElementById("editTask");
 
+const $sidebarAddBtn = document.querySelector('.sidebar-add');
+const $sidebarList = document.querySelector('.sidebar ul');
+
 // lista que vai receber os valores das tasks
 var todoList = [];
 
 function openModal(id) {
     $modal.style.display = "flex";
-  
+    if (!currentFolderId) {
+      alert("Por favor, selecione uma pasta primeiro.");
+      return;
+  }
     if (id) {
       $createTitle.style.display = "none";
       $editTitle.style.display = "block";
@@ -77,36 +83,42 @@ function generateCard(task) {
 
 // cria task e adiciona na lista
 function createTask() {
-    const newTask = {
-      id: Date.now(), // Usa timestamp como ID para garantir unicidade
+  if (!currentFolderId) {
+      alert("Por favor, selecione uma pasta primeiro.");
+      return;
+  }
+  const newTask = {
+      id: Date.now(),
       priority: $priorityInput.value,
       deadline: $deadlineInput.value,
       description: $descriptionInput.value,
       status: 'todo'
-    };
-    todoList.push(newTask);
-    saveToLocalStorage();
-    closeModal();
-    renderAllTasks();
-  }
+  };
+  const folderIndex = folders.findIndex(folder => folder.id === currentFolderId);
+  folders[folderIndex].tasks.push(newTask);
+  saveToLocalStorage();
+  closeModal();
+  renderAllTasks();
+}
 
 function updateTask() {
-    const taskId = Number($idInput.value);
-    const index = todoList.findIndex(task => task.id === taskId);
-    
-    if (index !== -1) {
-      todoList[index] = {
-        ...todoList[index],
-        priority: $priorityInput.value,
-        deadline: $deadlineInput.value,
-        description: $descriptionInput.value
+  if (!currentFolderId) return;
+  const taskId = Number($idInput.value);
+  const folderIndex = folders.findIndex(folder => folder.id === currentFolderId);
+  const taskIndex = folders[folderIndex].tasks.findIndex(task => task.id === taskId);
+  
+  if (taskIndex !== -1) {
+      folders[folderIndex].tasks[taskIndex] = {
+          ...folders[folderIndex].tasks[taskIndex],
+          priority: $priorityInput.value,
+          deadline: $deadlineInput.value,
+          description: $descriptionInput.value
       };
       saveToLocalStorage();
-    }
-  
-    closeModal();
-    renderAllTasks();
   }
+  closeModal();
+  renderAllTasks();
+}
 
 function allowDrop(ev) {
   ev.preventDefault();
@@ -132,46 +144,133 @@ function drop(ev) {
 }
 
 function updateTaskStatus(taskId, newStatus) {
-  const index = todoList.findIndex((task) => task.id == taskId);
-  if (index !== -1) {
-    todoList[index].status = newStatus;
-    saveToLocalStorage();
+  if (!currentFolderId) return;
+  const folderIndex = folders.findIndex(folder => folder.id === currentFolderId);
+  const taskIndex = folders[folderIndex].tasks.findIndex(task => task.id == taskId);
+  if (taskIndex !== -1) {
+      folders[folderIndex].tasks[taskIndex].status = newStatus;
+      saveToLocalStorage();
   }
   renderAllTasks();
 }
 
 function renderAllTasks() {
-    const todoTasks = todoList.filter(task => task.status === 'todo');
-    const inProgressTasks = todoList.filter(task => task.status === 'inProgress');
-    const doneTasks = todoList.filter(task => task.status === 'done');
-  
-    document.querySelector('#todoColumn .body').innerHTML = todoTasks.map(generateCard).join('');
-    document.querySelector('#inProgressColumn .body').innerHTML = inProgressTasks.map(generateCard).join('');
-    document.querySelector('#doneColumn .body').innerHTML = doneTasks.map(generateCard).join('');
+  if (!currentFolderId) {
+      document.querySelector('#todoColumn .body').innerHTML = '';
+      document.querySelector('#inProgressColumn .body').innerHTML = '';
+      document.querySelector('#doneColumn .body').innerHTML = '';
+      return;
   }
+  const currentFolder = folders.find(folder => folder.id === currentFolderId);
+  const todoTasks = currentFolder.tasks.filter(task => task.status === 'todo');
+  const inProgressTasks = currentFolder.tasks.filter(task => task.status === 'inProgress');
+  const doneTasks = currentFolder.tasks.filter(task => task.status === 'done');
 
-  function deleteTask(id) {
-    if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
-        const index = todoList.findIndex(task => task.id === id);
-        if (index !== -1) {
-            todoList.splice(index, 1);
-            saveToLocalStorage();
-            renderAllTasks();
-        }
-    }
+  document.querySelector('#todoColumn .body').innerHTML = todoTasks.map(generateCard).join('');
+  document.querySelector('#inProgressColumn .body').innerHTML = inProgressTasks.map(generateCard).join('');
+  document.querySelector('#doneColumn .body').innerHTML = doneTasks.map(generateCard).join('');
+}
+
+function deleteTask(id) {
+  if (!currentFolderId) return;
+  if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+      const folderIndex = folders.findIndex(folder => folder.id === currentFolderId);
+      folders[folderIndex].tasks = folders[folderIndex].tasks.filter(task => task.id !== id);
+      saveToLocalStorage();
+      renderAllTasks();
+  }
 }
 
 
 function saveToLocalStorage() {
-    localStorage.setItem('todoList', JSON.stringify(todoList));
+  localStorage.setItem('folders', JSON.stringify(folders));
 }
 
 function loadFromLocalStorage() {
-    const savedTodoList = localStorage.getItem('todoList');
-    if (savedTodoList) {
-        todoList = JSON.parse(savedTodoList);
-        renderAllTasks();
+  const savedFolders = localStorage.getItem('folders');
+  if (savedFolders) {
+      folders = JSON.parse(savedFolders);
+      renderFolders();
+  }
+}
+let folders = [];
+let currentFolderId = null;
+
+function createFolder() {
+    const folderName = prompt("Digite o nome da nova pasta:");
+    if (folderName) {
+        const newFolder = {
+            id: Date.now(),
+            name: folderName,
+            tasks: []
+        };
+        folders.push(newFolder);
+        renderFolders();
+        saveFoldersToLocalStorage();
     }
 }
+
+// Função para renderizar as pastas
+function renderFolders() {
+  $sidebarList.innerHTML = folders.map(folder => `
+      <li>
+          <i class="fa fa-folder folder"></i>
+          <a href="#" onclick="switchFolder(${folder.id})">${folder.name}</a>
+          <i class="fa fa-ellipsis-h folder-settings" onclick="showFolderOptions(${folder.id})"></i>
+      </li>
+  `).join('');
+}
+
+function switchFolder(folderId) {
+  currentFolderId = folderId;
+  renderAllTasks();
+}
+
+// Função para mostrar opções da pasta
+function showFolderOptions(folderId) {
+    const popup = document.createElement('div');
+    popup.className = 'folder-options-popup';
+    popup.innerHTML = `
+        <button onclick="deleteFolder(${folderId})">Deletar</button>
+    `;
+    
+    const folderElement = document.querySelector(`[onclick="showFolderOptions(${folderId})"]`);
+    folderElement.appendChild(popup);
+    
+    // Remover o popup após um clique fora dele
+    document.addEventListener('click', function removePop(e) {
+        if (!popup.contains(e.target) && e.target !== folderElement) {
+            popup.remove();
+            document.removeEventListener('click', removePop);
+        }
+    });
+}
+
+// Função para deletar uma pasta
+function deleteFolder(folderId) {
+    if (confirm('Tem certeza que deseja excluir esta pasta?')) {
+        folders = folders.filter(folder => folder.id !== folderId);
+        renderFolders();
+        saveFoldersToLocalStorage();
+    }
+}
+
+// Função para salvar pastas no localStorage
+function saveFoldersToLocalStorage() {
+    localStorage.setItem('folders', JSON.stringify(folders));
+}
+
+// Função para carregar pastas do localStorage
+function loadFoldersFromLocalStorage() {
+    const savedFolders = localStorage.getItem('folders');
+    if (savedFolders) {
+        folders = JSON.parse(savedFolders);
+        renderFolders();
+    }
+}
+
+// Adicione estes event listeners
+$sidebarAddBtn.addEventListener('click', createFolder);
+document.addEventListener('DOMContentLoaded', loadFoldersFromLocalStorage);
 
 document.addEventListener('DOMContentLoaded', loadFromLocalStorage);
