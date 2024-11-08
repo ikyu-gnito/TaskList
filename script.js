@@ -12,41 +12,43 @@ const $editTask = document.getElementById("editTask");
 const $sidebarAddBtn = document.querySelector('.sidebar-add');
 const $sidebarList = document.querySelector('.sidebar ul');
 
+
 // lista que vai receber os valores das tasks
 var todoList = [];
 
 function openModal(id) {
-    $modal.style.display = "flex";
-    if (!currentFolderId) {
+  $modal.style.display = "flex";
+  if (!currentFolderId) {
       alert("Por favor, selecione uma pasta primeiro.");
       return;
   }
-    if (id) {
+  if (id) {
       $createTitle.style.display = "none";
       $editTitle.style.display = "block";
       $addTask.style.display = "none";
       $editTask.style.display = "block";
-  
-      const task = todoList.find(task => task.id === id);
-  
+
+      const folderIndex = folders.findIndex(folder => folder.id === currentFolderId);
+      const task = folders[folderIndex].tasks.find(task => task.id === id); // Certifique-se de que está buscando na pasta correta
+
       if (task) {
-        $idInput.value = task.id;
-        $descriptionInput.value = task.description;
-        $priorityInput.value = task.priority;
-        $deadlineInput.value = task.deadline;
+          $idInput.value = task.id;
+          $descriptionInput.value = task.description;
+          $priorityInput.value = task.priority;
+          $deadlineInput.value = task.deadline;
       }
-    } else {
+  } else {
       $createTitle.style.display = "block";
       $editTitle.style.display = "none";
       $addTask.style.display = "block";
       $editTask.style.display = "none";
-  
+
       $idInput.value = "";
       $descriptionInput.value = "";
       $priorityInput.value = "";
       $deadlineInput.value = "";
-    }
   }
+}
 
 function closeModal() {
   $modal.style.display = "none";
@@ -85,7 +87,7 @@ function generateCard(task) {
 function createTask() {
   if (!currentFolderId) {
       alert("Por favor, selecione uma pasta primeiro.");
-      return;
+      return; // Adicione esta linha para impedir que o modal seja aberto
   }
   const newTask = {
       id: Date.now(),
@@ -102,8 +104,8 @@ function createTask() {
 }
 
 function updateTask() {
-  if (!currentFolderId) return;
-  const taskId = Number($idInput.value);
+  if (!currentFolderId) return; // Verifica se uma pasta está selecionada
+  const taskId = Number($idInput.value); // Obtém o ID da tarefa a partir do campo oculto
   const folderIndex = folders.findIndex(folder => folder.id === currentFolderId);
   const taskIndex = folders[folderIndex].tasks.findIndex(task => task.id === taskId);
   
@@ -114,10 +116,12 @@ function updateTask() {
           deadline: $deadlineInput.value,
           description: $descriptionInput.value
       };
-      saveToLocalStorage();
+      saveToLocalStorage(); // Salva as alterações
+      closeModal(); // Fecha o modal após salvar
+      renderAllTasks(); // Renderiza as tarefas novamente
+  } else {
+      alert("Tarefa não encontrada!");
   }
-  closeModal();
-  renderAllTasks();
 }
 
 function allowDrop(ev) {
@@ -172,12 +176,12 @@ function renderAllTasks() {
 }
 
 function deleteTask(id) {
-  if (!currentFolderId) return;
+  if (!currentFolderId) return; // Verifica se uma pasta está selecionada
   if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
       const folderIndex = folders.findIndex(folder => folder.id === currentFolderId);
       folders[folderIndex].tasks = folders[folderIndex].tasks.filter(task => task.id !== id);
-      saveToLocalStorage();
-      renderAllTasks();
+      saveToLocalStorage(); // Salva as alterações
+      renderAllTasks(); // Renderiza as tarefas novamente
   }
 }
 
@@ -197,17 +201,21 @@ let folders = [];
 let currentFolderId = null;
 
 function createFolder() {
-    const folderName = prompt("Digite o nome da nova pasta:");
-    if (folderName) {
-        const newFolder = {
-            id: Date.now(),
-            name: folderName,
-            tasks: []
-        };
-        folders.push(newFolder);
-        renderFolders();
-        saveFoldersToLocalStorage();
-    }
+  const folderName = prompt("Digite o nome da nova pasta:");
+  if (folderName) {
+      const newFolder = {
+          id: Date.now(),
+          name: folderName,
+          tasks: [] // Inicializa com uma lista vazia de tarefas
+      };
+      folders.push(newFolder);
+      saveFoldersToLocalStorage();
+      renderFolders();
+      
+      // Selecione a nova pasta e renderize as tarefas
+      currentFolderId = newFolder.id; // Atualiza o currentFolderId para a nova pasta
+      renderAllTasks(); // Renderiza as tarefas da nova pasta
+  }
 }
 
 // Função para renderizar as pastas
@@ -228,22 +236,28 @@ function switchFolder(folderId) {
 
 // Função para mostrar opções da pasta
 function showFolderOptions(folderId) {
-    const popup = document.createElement('div');
-    popup.className = 'folder-options-popup';
-    popup.innerHTML = `
-        <button onclick="deleteFolder(${folderId})">Deletar</button>
-    `;
-    
-    const folderElement = document.querySelector(`[onclick="showFolderOptions(${folderId})"]`);
-    folderElement.appendChild(popup);
-    
-    // Remover o popup após um clique fora dele
-    document.addEventListener('click', function removePop(e) {
-        if (!popup.contains(e.target) && e.target !== folderElement) {
-            popup.remove();
-            document.removeEventListener('click', removePop);
-        }
-    });
+  // Primeiro, remova qualquer popup existente
+  const existingPopup = document.querySelector('.folder-options-popup');
+  if (existingPopup) {
+      existingPopup.remove(); // Remove o popup existente
+  }
+
+  const popup = document.createElement('div');
+  popup.className = 'folder-options-popup';
+  popup.innerHTML = `
+      <button onclick="deleteFolder(${folderId})">Deletar</button>
+  `;
+  
+  const folderElement = document.querySelector(`[onclick="showFolderOptions(${folderId})"]`);
+  folderElement.appendChild(popup);
+  
+  // Remover o popup após um clique fora dele
+  document.addEventListener('click', function removePop(e) {
+      if (!popup.contains(e.target) && e.target !== folderElement) {
+          popup.remove();
+          document.removeEventListener('click', removePop);
+      }
+  });
 }
 
 // Função para deletar uma pasta
@@ -268,6 +282,14 @@ function loadFoldersFromLocalStorage() {
         renderFolders();
     }
 }
+
+document.getElementById('addTaskButton').addEventListener('click', function() {
+  if (!currentFolderId) {
+      alert("Por favor, selecione uma pasta primeiro.");
+      return; // Impede que o modal seja aberto
+  }
+  openModal(); // Abre o modal apenas se uma pasta estiver selecionada
+});
 
 // Adicione estes event listeners
 $sidebarAddBtn.addEventListener('click', createFolder);
