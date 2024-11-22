@@ -60,27 +60,28 @@ function closeModal() {
 }
 
 function generateCard(task) {
-    const formatedDate = moment(task.deadline).format('DD/MM/YYYY');
-    return `
-      <div class="card" id="task-${task.id}" data-id="${task.id}" draggable="true" ondragstart="drag(event)">
-        <div class="card-header">
-          <span class="edit-btn" onclick="openModal(${task.id})">Editar</span>
-          <span class="delete-btn" onclick="deleteTask(${task.id})"><i class="fa-solid fa-rectangle-xmark xmark"></i></span>
-        </div>
-        <div class="info">
-          <b>Prioridade:</b>
-          <span>${task.priority}</span>
-        </div>
-        <div class="info">
-          <b>Prazo:</b>
-          <span>${formatedDate}</span>
-        </div>
-        <div class="info">
-          <b>Descrição:</b>
-          <span>${task.description}</span>
-        </div>
+  const formatedDate = moment(task.deadline).format('DD/MM/YYYY');
+  return `
+    <div class="card" id="task-${task.id}" data-id="${task.id}" draggable="true" ondragstart="drag(event)">
+      <div class="card-header">
+        <input type="text" class="task-title" value="${task.title}" onblur="updateTaskTitle(${task.id}, this.value)" />
+        <span class="edit-btn" onclick="openModal(${task.id})">Editar</span>
+        <span class="delete-btn" onclick="deleteTask(${task.id})"><i class="fa-solid fa-rectangle-xmark xmark"></i></span>
       </div>
-    `;
+      <div class="info">
+        <b>Prioridade:</b>
+        <span>${task.priority}</span>
+      </div>
+      <div class="info">
+        <b>Prazo:</b>
+        <span>${formatedDate}</span>
+      </div>
+      <div class="info">
+        <b>Descrição:</b>
+        <span>${task.description}</span>
+      </div>
+    </div>
+  `;
 }
 
 // cria task e adiciona na lista
@@ -91,6 +92,7 @@ function createTask() {
   }
   const newTask = {
       id: Date.now(),
+      title: $titleInput.value, // Novo campo para título
       priority: $priorityInput.value,
       deadline: $deadlineInput.value,
       description: $descriptionInput.value,
@@ -281,6 +283,19 @@ function loadFoldersFromLocalStorage() {
         folders = JSON.parse(savedFolders);
         renderFolders();
     }
+}
+function updateTaskTitle(taskId, newTitle) {
+  if (!currentFolderId) return; // Verifica se uma pasta está selecionada
+  const folderIndex = folders.findIndex(folder => folder.id === currentFolderId);
+  const taskIndex = folders[folderIndex].tasks.findIndex(task => task.id === taskId);
+
+  if (taskIndex !== -1) {
+      folders[folderIndex].tasks[taskIndex].title = newTitle; // Atualiza o título da tarefa
+      saveToLocalStorage(); // Salva as alterações
+      renderAllTasks(); // Renderiza as tarefas novamente
+  } else {
+      alert("Tarefa não encontrada!");
+  }
 }
 
 document.getElementById('addTaskButton').addEventListener('click', function() {
