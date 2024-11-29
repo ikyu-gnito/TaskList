@@ -130,12 +130,12 @@ body {
     background-color: var(--color2);
     border-radius: 7px;
     box-sizing: border-box;
-    scrollbar-width: none; /* Oculta a barra de rolagem */
+    scrollbar-width: none; 
     -ms-overflow-style: none;
 }
 .column::-webkit-scrollbar {
-    width: 0; /* Oculta a barra de rolagem vertical */
-    background: transparent; /* Fundo da barra de rolagem */
+    width: 0; 
+    background: transparent; 
 }
 
 .main-content .column .head {
@@ -332,12 +332,12 @@ body {
     background-color: darkred;
 }
 
-/* Estilos gerais para desktop */
+
 .sidebar {
-    width: 250px; /* Largura da sidebar em desktop */
+    width: 250px; 
 }
 
 .column {
-    width: calc(33.33% - 20px); /* 3 colunas lado a lado */
-    margin: 10px; /* Margem entre colunas */
+    width: calc(33.33% - 20px); 
+    margin: 10px;
 }
