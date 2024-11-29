@@ -37,6 +37,7 @@ body {
     color: white;
     padding: 20px;
     border-right: 1px solid var(--color1);
+    z-index: 20;
 }
 
 /* menu lateral */
@@ -138,7 +139,8 @@ body {
 }
 
 .main-content .column .head {
-    position: fixed;
+    position: sticky;
+    top: 0;
     text-align: center;
     font-size: 20px;
     font-weight: 700;
@@ -146,6 +148,7 @@ body {
     padding: 20px;
     background-color: var(--color2);
     border-radius: 7px;
+    z-index: 10;
 }
 
 .main-content .column .body {
@@ -327,4 +330,14 @@ body {
 }
 .delete-folder-button:hover{
     background-color: darkred;
+}
+
+/* Estilos gerais para desktop */
+.sidebar {
+    width: 250px; /* Largura da sidebar em desktop */
+}
+
+.column {
+    width: calc(33.33% - 20px); /* 3 colunas lado a lado */
+    margin: 10px; /* Margem entre colunas */
 }
