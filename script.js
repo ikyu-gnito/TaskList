@@ -221,9 +221,9 @@ function createFolder() {
 // Função para renderizar as pastas
 function renderFolders() {
   $sidebarList.innerHTML = folders.map(folder => `
-      <li>
+      <li class="${folder.id === currentFolderId ? 'selected-folder' : ''}">
           <i class="fa fa-folder folder"></i>
-          <a href="#" onclick="switchFolder(${folder.id})">${folder.name}</a>
+          <a class="folder-title" href="#" onclick="switchFolder(${folder.id})">${folder.name}</a>
           <i class="fa fa-ellipsis-h folder-settings" onclick="showFolderOptions(${folder.id})"></i>
       </li>
   `).join('');
@@ -232,6 +232,7 @@ function renderFolders() {
 function switchFolder(folderId) {
   currentFolderId = folderId;
   renderAllTasks();
+  renderFolders(); 
 }
 
 // Função para mostrar opções da pasta
@@ -245,7 +246,7 @@ function showFolderOptions(folderId) {
   const popup = document.createElement('div');
   popup.className = 'folder-options-popup';
   popup.innerHTML = `
-      <button onclick="deleteFolder(${folderId})">Deletar</button>
+      <button class ="delete-folder-button" onclick="deleteFolder(${folderId})">Deletar</button>
   `;
   
   const folderElement = document.querySelector(`[onclick="showFolderOptions(${folderId})"]`);
