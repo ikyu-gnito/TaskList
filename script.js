@@ -292,7 +292,7 @@ document.getElementById('addTaskButton').addEventListener('click', function() {
   openModal(); // Abre o modal apenas se uma pasta estiver selecionada
 });
 
-// Adicione estes event listeners
+
 $sidebarAddBtn.addEventListener('click', createFolder);
 document.addEventListener('DOMContentLoaded', loadFoldersFromLocalStorage);
 
