@@ -139,6 +139,7 @@ body {
 }
 
 .main-content .column .head {
+    z-index: 10;
     position: sticky;
     top: 0;
     text-align: center;
@@ -148,7 +149,6 @@ body {
     padding: 20px;
     background-color: var(--color2);
     border-radius: 7px;
-    z-index: 10;
 }
 
 .main-content .column .body {
@@ -188,6 +188,7 @@ body {
 .main-content .column .body .card .info {}
 
 #modal {
+    z-index: 11;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -334,7 +335,7 @@ body {
 
 
 .sidebar {
-    width: 250px; 
+    width: 200px; 
 }
 
 .column {
